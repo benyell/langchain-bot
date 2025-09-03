@@ -20,71 +20,73 @@ I have implemented a ReAct (Reasoning and Acting) AI agent that can use multiple
 
 ### Implementation
 
-1. AI Agent Backend: I implemented a robust FastAPI application that hosts a LangChain agent capable of using multiple tools to interact with data and provide intelligent responses.
-
+1. AI Agent Backend:\
+I implemented a robust FastAPI application that hosts a LangChain agent capable of using multiple tools to interact with data and provide intelligent responses.\
 Key Implementation Details:
-
 * Single /invoke POST endpoint for all agent interactions
+
 * CORS configuration for seamless frontend-backend communication
+
 * Async request handling for optimal performance
 
-2. Real-Time Streaming Responses
-I developed a streaming system using Server-Sent Events to provide real-time conversational experiences with visual agent reasoning steps.
-
-> @app.post("/invoke")
-> async def invoke(content: str):
->     return StreamingResponse(
->         token_generator(content, streamer),
->         media_type="text/event-stream",
->         headers={"Cache-Control": "no-cache", "Connection": "keep-alive"}
-    )
-
-Streaming Features Implemented:
-
+2. Real-Time Streaming Responses\
+I developed a streaming system using Server-Sent Events to provide real-time conversational experiences with visual agent reasoning steps.\
+> @app.post("/invoke")\
+> async def invoke(content: str):\
+>     return StreamingResponse(\
+>         token_generator(content, streamer),\
+>         media_type="text/event-stream",\
+>         headers={"Cache-Control": "no-cache", "Connection": "keep-alive"}\
+>    )\\
+Streaming Features Implemented:\
 * QueueCallbackHandler: Custom async callback handler for real-time token streaming
+
 * Token Processing: Intelligent parsing of tool calls, arguments, and step transitions
+
 * XML Markup: Structured streaming with step and step_name tags for frontend parsing
+
 * Error Handling: Robust error recovery during streaming to prevent connection drops
 
-3. Custome Agent Executor
-I built a custom CustomAgentExecutor class that manages the agent's conversation flow, tool execution, and iteration control.The following are the features:
-
+3. Custome Agent Executor\
+I built a custom CustomAgentExecutor class that manages the agent's conversation flow, tool execution, and iteration control.\
+The following are the features:
 * Conversation Memory: Maintains persistent chat history across interactions
+
 * Agent Scratchpad: Tracks intermediate reasoning steps and tool outputs
+
 * Iteration Control: Prevents infinite loops with configurable max iterations
+
 * Tool Execution Flow: Orchestrates sequential tool usage until final answer
 
-4. Multi-Tool Integration
-Here, I implemented a comprehensive tool ecosystem with both synchronous and asynchronous capabilities. Mathematical operations, Web Search via SerpAPI with async HTTP requests and Final answer tool for response completion are some of the major ones.
+4. Multi-Tool Integration\
+Here, I implemented a comprehensive tool ecosystem with both synchronous and asynchronous capabilities.\ Mathematical operations, Web Search via SerpAPI with async HTTP requests and Final answer tool for response completion are some of the major ones.
 
-5. LangChain Expression Language (LCEL)
-Here, I utilised LCEL to create agent pipelines with dynamic prompt templates and tool binding.
-
->self.agent = (
->    {
->        "input": lambda x: x["input"],
->        "chat_history": lambda x: x["chat_history"],
->        "agent_scratchpad": lambda x: x.get("agent_scratchpad", [])
->    }
->    | prompt
->    | llm.bind_tools(tools, tool_choice="any")
->)
-
+5. LangChain Expression Language (LCEL)\
+Here, I utilised LCEL to create agent pipelines with dynamic prompt templates and tool binding.\
+>self.agent = (\
+>    {\
+>        "input": lambda x: x["input"],\
+>        "chat_history": lambda x: x["chat_history"],\
+>        "agent_scratchpad": lambda x: x.get("agent_scratchpad", [])\
+>    }\
+>    | prompt\
+>    | llm.bind_tools(tools, tool_choice="any")\
+>)\
 I have used lambda fucntions, prompt template, tool bindings and chain composition using pipeline operators to implement the agent framework.
 
-6. Next.js Front end integration
-
+6. Next.js Front end integration\
 I developed a responsive chat interface that consumes the streaming API and displays agent reasoning steps in real-time.
 
-7. Production Deployment Pipeline
-
+7. Production Deployment Pipeline\
 I containerized the entire application and implemented a complete AWS deployment pipeline.
 
-8. AWS Production Pipeline:
-
+8. AWS Production Pipeline:\
 * ECR: Container registry for Docker image storage
+
 * ECS Clusters: Container orchestration with auto-scaling
+
 * Application Load Balancer: Traffic distribution across instances
+
 * Production Scalability: Horizontal scaling based on demand
 
 
