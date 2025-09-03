@@ -4,6 +4,12 @@ An end-to-end AI Chat application built using LangChain, FastAPI. This project i
 
 Here is the Deployed Applicatioon: http://langchain-bot-alb-177873306.us-east-2.elb.amazonaws.com/
 
+Try these Queries:
+
+1. What is the time in Greece?
+2. What is the weather in India and Dubai? Give me the latest news of these places.
+3. What is 2*2?
+
 The Application uses the OpenAI LLM and builds an agent to perform Websearch (SerpAPI) and Mathematical operations.
 
 ## Key Features
