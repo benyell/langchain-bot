@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./lc-backend
+    ports:
+      - "8000:80"
+    env_file:
+      - ./lc-backend/.env
+    volumes:
+      - ./lc-backend:/app
+    # Delete the line below
+    # command: uvicorn api.main:app --host 0.0.0.0 --port 80 --reload
+
+  frontend:
+    build: ./lc-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./lc-frontend:/app
+    env_file:
+      - ./lc-frontend/.env.local
+    command: npm run dev

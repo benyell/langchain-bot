@@ -1,0 +1,23 @@
+# Dependencies
+# Ignores Node.js dependencies
+/lc-frontend/node_modules
+
+# Ignores Python virtual environment
+/lc-backend/.venv
+
+# Ignore environment variables
+# Keep this at the top level
+.env
+
+# Build outputs
+# Ignores the Next.js build output
+/lc-frontend/.next
+
+# Ignores Python compiled files
+/lc-backend/__pycache__/
+*.pyc
+
+# IDE and OS files
+# Ignores temporary and system-specific files
+.DS_Store
+.vscode
