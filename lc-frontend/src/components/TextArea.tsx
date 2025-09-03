@@ -46,7 +46,15 @@ const TextArea = ({
     setIsGenerating(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/invoke?content=${text}`, {
+
+      // Get API URL with fallback logic
+      let apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+      // If undefined or empty, use current origin (relative URL approach)
+      if (!apiUrl || apiUrl === 'undefined') {
+        apiUrl = ''; // This will make it a relative URL
+      }
+      const res = await fetch(`${apiUrl}/invoke?content=${text}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
