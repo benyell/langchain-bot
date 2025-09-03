@@ -1,33 +1,125 @@
-### LangChain Chatbot Project
-An end-to-end AI chatbot application built with a FastAPI backend and a Next.js frontend. This project demonstrates a full-stack, containerized system for an AI agent, showcasing skills in API development, modern front-end frameworks, and robust deployment practices.
+# LangChain Chatbot Project
 
-## Features
-* AI Agent Backend: A FastAPI API that hosts a LangChain agent capable of using tools to interact with data.
+An end-to-end AI Chat application built using LangChain, FastAPI. This project is done as an exercise to understand the concepts of RAG Pipelines, Agent Tools, Langchain, FastAPI, Streaming and their use in the LLM World. 
 
-* Decoupled Architecture: A clean separation of the backend API and the front-end user interface.
+Here is the Deployed Applicatioon: http://langchain-bot-alb-177873306.us-east-2.elb.amazonaws.com/
 
-* Streaming Responses: The API supports streaming to provide a real-time conversational experience with the chatbot.
+The Application uses the OpenAI LLM and builds an agent to perform Websearch (SerpAPI) and Mathematical operations.
 
-* Containerized Development: The entire application is containerized using Docker and Docker Compose for consistent local development and production deployment.
+## Key Features
 
-## Project Architecture
-This project is structured as a monorepo, containing two distinct services:
+I have implemented a ReAct (Reasoning and Acting) AI agent that can use multiple tools to answer user queries while streaming its reasoning process in real-time.
 
-* lc-backend: A Python-based FastAPI application that contains the core AI agent logic.
+### Tech Stack
 
-* lc-frontend: A Next.js application that provides the user interface for the chatbot.
+* Backend: FastAPI + LangChain + OpenAI GPT-4
+* Frontend: Next.js
+* Tools: SerpAPI (Web Search), Mathematical Operations
+* Deployment: Docker + AWS ECS
+* Streaming: Server-Sent Events (SSE)
 
-The services communicate over a defined API, and the entire system can be launched locally with a single command.
+### Implementation
 
-## Technologies Used
-### Backend
-* Python: The core language for the backend logic.
-* FastAPI: A modern, high-performance web framework for building the API.
-* LangChain: The framework used to build the AI agent and tools.
-* uv: A fast and modern dependency manager for Python.
-* Docker: Used to containerize the backend for a reproducible environment.
+1. AI Agent Backend: I implemented a robust FastAPI application that hosts a LangChain agent capable of using multiple tools to interact with data and provide intelligent responses.
 
-### Frontend
-* Next.js: A React framework for building a fast, static-ready front end.
-* React & TypeScript: The language and library for building the user interface.
-* Node.js: The runtime environment for the Next.js application.
+Key Implementation Details:
+
+* Single /invoke POST endpoint for all agent interactions
+* CORS configuration for seamless frontend-backend communication
+* Async request handling for optimal performance
+
+2. Real-Time Streaming Responses
+I developed a streaming system using Server-Sent Events to provide real-time conversational experiences with visual agent reasoning steps.
+
+> @app.post("/invoke")
+> async def invoke(content: str):
+>     return StreamingResponse(
+>         token_generator(content, streamer),
+>         media_type="text/event-stream",
+>         headers={"Cache-Control": "no-cache", "Connection": "keep-alive"}
+    )
+
+Streaming Features Implemented:
+
+* QueueCallbackHandler: Custom async callback handler for real-time token streaming
+* Token Processing: Intelligent parsing of tool calls, arguments, and step transitions
+* XML Markup: Structured streaming with step and step_name tags for frontend parsing
+* Error Handling: Robust error recovery during streaming to prevent connection drops
+
+3. Custome Agent Executor
+I built a custom CustomAgentExecutor class that manages the agent's conversation flow, tool execution, and iteration control.The following are the features:
+
+* Conversation Memory: Maintains persistent chat history across interactions
+* Agent Scratchpad: Tracks intermediate reasoning steps and tool outputs
+* Iteration Control: Prevents infinite loops with configurable max iterations
+* Tool Execution Flow: Orchestrates sequential tool usage until final answer
+
+4. Multi-Tool Integration
+Here, I implemented a comprehensive tool ecosystem with both synchronous and asynchronous capabilities. Mathematical operations, Web Search via SerpAPI with async HTTP requests and Final answer tool for response completion are some of the major ones.
+
+5. LangChain Expression Language (LCEL)
+Here, I utilised LCEL to create agent pipelines with dynamic prompt templates and tool binding.
+
+>self.agent = (
+>    {
+>        "input": lambda x: x["input"],
+>        "chat_history": lambda x: x["chat_history"],
+>        "agent_scratchpad": lambda x: x.get("agent_scratchpad", [])
+>    }
+>    | prompt
+>    | llm.bind_tools(tools, tool_choice="any")
+>)
+
+I have used lambda fucntions, prompt template, tool bindings and chain composition using pipeline operators to implement the agent framework.
+
+6. Next.js Front end integration
+
+I developed a responsive chat interface that consumes the streaming API and displays agent reasoning steps in real-time.
+
+7. Production Deployment Pipeline
+
+I containerized the entire application and implemented a complete AWS deployment pipeline.
+
+8. AWS Production Pipeline:
+
+* ECR: Container registry for Docker image storage
+* ECS Clusters: Container orchestration with auto-scaling
+* Application Load Balancer: Traffic distribution across instances
+* Production Scalability: Horizontal scaling based on demand
+
+
+## Running the app
+
+Clone the repository. the repository has two subfolders: lc-backend and lc-frontend
+
+Create a .env from .env.example and enter the API keys.
+
+### For Running the backend. 
+
+Go to root folder. Open Terminal in this folder and enter these commands
+
+> cd lc-backend\
+> curl -LsSf https://astral.sh/uv/install.sh | sh\
+> uv python install 3.12.7\
+> uv venv --python 3.12.7\
+> uv sync
+
+Now enter the folder api
+
+> cd api\
+> uv run uvicorn main:app --reload
+
+This will run the Backend and we can check it; https://localhost:8000/docs
+
+### For running the FrontEnd. 
+
+Open a terminal in the lc-frontend folder
+
+or from root folder
+
+> cd lc-frontend
+
+Then type these commands
+
+> npm install\
+> npm run dev
