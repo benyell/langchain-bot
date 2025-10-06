@@ -4,6 +4,18 @@ An end-to-end AI Chat application built using LangChain, FastAPI. This project i
 
 Here is the Deployed Applicatioon: http://langchain-bot-alb-177873306.us-east-2.elb.amazonaws.com/
 
+<table>
+  <tr>
+    <td>
+      <img src="frontend/LC_1.png" alt="Chatbot FE" width="300" />
+      <p>Chatbot Front End</p>
+    </td>
+    <td>
+      <img src="frontned/LC_2.png" alt="Chatbot Query" width="300" />
+      <p>Chatbot Query </p>
+    </td>
+  </tr>
+</table>
 Try these Queries:
 
 1. What is the time in Greece?
