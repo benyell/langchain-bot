@@ -2,8 +2,6 @@
 
 An end-to-end AI Chat application built using LangChain, FastAPI. This project is done as an exercise to understand the concepts of RAG Pipelines, Agent Tools, Langchain, FastAPI, Streaming and their use in the LLM World. 
 
-Here is the Deployed Applicatioon: http://langchain-bot-alb-177873306.us-east-2.elb.amazonaws.com/
-
 <table>
   <tr>
     <td>
